@@ -1,0 +1,33 @@
+name: Simple Node.js CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Pull code from repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Build the application (install dependencies)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      # 3. Run automated tests
+      - name: Run tests
+        run: npm test
+
+      # 4. Deploy to a simple staging environment
+      - name: Deploy (run app on server)
+        run: node app.js
