@@ -1,20 +1,18 @@
-name: Demo Node.js CI/CD
+name: Node.js CI/CD with Docker Hub
 
-# Trigger workflow on every push to main
 on:
   push:
     branches: [ main ]
 
 jobs:
-  test-run:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout the repository
+      # 1. Pull code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Set up Node.js
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -24,18 +22,33 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4. Run a test command (Jest)
+      # 4. Run tests
       - name: Run tests
         run: npm test
 
-      # 5. Simple deploy step (just runs the app)
-      - name: Deploy (run app)
-        run: node app.js
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      # 1. Pull code again
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-              # 5. Build Docker image (staging deployment)
+      # 2. Login to Docker Hub
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Build Docker image
       - name: Build Docker image
-        run: docker build -t my-node-app .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-js:latest .
 
-      # 6. Run Docker container (simple staging/test environment)
+      # 4. Run Docker container (staging/test)
       - name: Run Docker container
-        run: docker run -d -p 3000:3000 my-node-app
+        run: docker run -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-js:latest
+
+      # 5. Push Docker image to Docker Hub
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-js:latest
