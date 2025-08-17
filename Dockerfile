@@ -1,10 +1,9 @@
-# Use Node.js 18 as base image
 FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Copy all files
+# Copy project files
 COPY . .
 
 # Install dependencies
@@ -12,6 +11,3 @@ RUN npm install
 
 # Run the app
 CMD ["node", "app.js"]
-
-
-

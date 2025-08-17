@@ -8,7 +8,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -30,15 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
-      # 1. Checkout code again
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
       # 2. Build Docker image
       - name: Build Docker image
-        run: |
-          echo "Dockerfile must exist in root directory"
-          docker build -t my-node-app:latest .
+        run: docker build -t my-node-app:latest .
 
       # 3. Run Docker container
       - name: Run Docker container
