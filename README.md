@@ -4,7 +4,7 @@ This is a simple Node.js application that prints **Hello, World** and includes a
 
 ---
 
-## 🚀 Running the Application Locally
+##  Running the Application Locally
 
 ### 1. Clone the repository
 
@@ -41,23 +41,21 @@ npm test
 
 ## ⚙️ CI/CD Pipeline Workflow
 
-This repository includes a **GitHub Actions** workflow defined in `.github/workflows/cicd.yml`.
+This repository includes a **GitHub Actions** workflow defined in `.github/workflows/main.yml`.
 
 The pipeline has **two jobs**:
 
 ### **1. Test Job**
 
 * Checks out the repository.
-* Sets up Node.js (version 20).
-* Installs dependencies using `npm ci` (ensures clean installation).
+* Sets up Node.js (version 18).
+* Installs dependencies using `npm install -y.
 * Runs automated tests using `npm test`.
 
 ### **2. Build & Push Job**
 
 * Runs **only if the test job passes**.
-* Logs in to Docker Hub using secrets.
-* Builds the Docker image using the provided `Dockerfile`.
-* Pushes the image to Docker Hub.
+* Builds and deploys the Docker image
 
 ---
 
@@ -65,38 +63,7 @@ The pipeline has **two jobs**:
 
 ### **1. Environment Requirements**
 
-* Node.js (v20 or above)
+* Node.js (v18 or above)
 * npm
 * Docker
-
-### **2. Docker Setup**
-
-
-If you want to run the application inside Docker:
-
-bash
-docker pull yourusername/hello-world-js:latest
-docker run --rm yourusername/hello-world-js:latest
-
-```
-
-### **3. GitHub Secrets Configuration**
-
-In your GitHub repository settings, add the following secrets:
-
-* `DOCKERHUB_USERNAME` – Your Docker Hub username.
-* `DOCKERHUB_TOKEN` – Your Docker Hub access token.
-
----
-
-## 📦 Dockerfile
-
-```dockerfile
-FROM node:20-alpine
-WORKDIR /app
-COPY . .
-CMD ["node", "main.js"]
-```
-
----
-
+* Github
