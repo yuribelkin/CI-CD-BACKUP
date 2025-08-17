@@ -1,33 +1,41 @@
-name: Simple Node.js CI/CD
+name: Demo Node.js CI/CD
 
+# Trigger workflow on every push to main
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  build-test-deploy:
+  test-run:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Pull code from repo
+      # 1. Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Build the application (install dependencies)
+      # 2. Set up Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 3. Run automated tests
+      # 4. Run a test command (Jest)
       - name: Run tests
         run: npm test
 
-      # 4. Deploy to a simple staging environment
-      - name: Deploy (run app on server)
+      # 5. Simple deploy step (just runs the app)
+      - name: Deploy (run app)
         run: node app.js
+
+              # 5. Build Docker image (staging deployment)
+      - name: Build Docker image
+        run: docker build -t my-node-app .
+
+      # 6. Run Docker container (simple staging/test environment)
+      - name: Run Docker container
+        run: docker run -d -p 3000:3000 my-node-app
